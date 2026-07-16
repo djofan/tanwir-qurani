@@ -60,13 +60,11 @@ class HasilTugasPage extends Page implements HasTable
                 Tables\Columns\TextColumn::make('attempts_count')
                     ->label('Percobaan Ke'),
 
-                Tables\Columns\IconColumn::make('is_late')
-                    ->label('Terlambat')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-clock')
-                    ->falseIcon('heroicon-o-check')
-                    ->trueColor('warning')
-                    ->falseColor('gray'),
+                Tables\Columns\TextColumn::make('is_late')
+                    ->label('Ketepatan')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => $state ? 'Terlambat' : 'Tepat Waktu')
+                    ->color(fn ($state) => $state ? 'danger' : 'success'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dikumpulkan')

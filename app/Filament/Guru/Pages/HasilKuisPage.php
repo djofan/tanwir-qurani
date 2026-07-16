@@ -57,13 +57,11 @@ class HasilKuisPage extends Page implements HasTable
                     ->label('Benar/Total')
                     ->getStateUsing(fn (Submission $record) => $record->quizAnswers->where('is_correct', true)->count() . ' / ' . $record->quizAnswers->count()),
 
-                Tables\Columns\IconColumn::make('is_late')
-                    ->label('Terlambat')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-clock')
-                    ->falseIcon('heroicon-o-check')
-                    ->trueColor('warning')
-                    ->falseColor('gray'),
+                Tables\Columns\TextColumn::make('is_late')
+                    ->label('Ketepatan')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => $state ? 'Terlambat' : 'Tepat Waktu')
+                    ->color(fn ($state) => $state ? 'danger' : 'success'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dikumpulkan')
