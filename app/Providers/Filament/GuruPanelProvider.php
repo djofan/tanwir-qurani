@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Auth\CodeLogin;
 use App\Filament\Guru\Pages\Dashboard;
 use App\Filament\Guru\Pages\HasilKuisPage;
+use App\Filament\Guru\Pages\HasilTugasPage;
 use App\Filament\Guru\Widgets\GuruApprovalWidget;
 use App\Filament\Guru\Widgets\GuruPesertaTable;
 use App\Filament\Guru\Widgets\GuruStatsOverview;
@@ -42,6 +43,7 @@ class GuruPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
                 HasilKuisPage::class,
+                HasilTugasPage::class,
             ])
             ->widgets([
                 GuruStatsOverview::class,

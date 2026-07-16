@@ -261,6 +261,13 @@ class TugasGuruResource extends Resource
                     ->visible(fn (Task $record) => $record->type === 'quiz' && $record->canBeReviewedBy(Auth::id()))
                     ->url(fn (Task $record) => route('filament.guru.pages.tugas.{task}.hasil-kuis', ['task' => $record->id])),
 
+                Action::make('lihatHasilTugas')
+                    ->label('Hasil Tugas')
+                    ->icon('heroicon-o-chart-bar')
+                    ->color('success')
+                    ->visible(fn (Task $record) => in_array($record->type, ['video', 'voice_note']) && $record->canBeReviewedBy(Auth::id()))
+                    ->url(fn (Task $record) => route('filament.guru.pages.tugas.{task}.hasil-tugas', ['task' => $record->id])),
+
                 Action::make('extendDeadline')
                     ->label('Perpanjang')
                     ->icon('heroicon-o-clock')
