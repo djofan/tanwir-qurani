@@ -51,7 +51,7 @@ class User extends Authenticatable implements FilamentUser
     public static function generateCode(string $role, ?string $program): string
     {
         $rolePrefix    = $role === 'guru' ? 'G' : 'P';
-        $programPrefix = $program === 'ojol_mengaji' ? 'OM' : 'TQ';
+        $programPrefix = 'TQ';
 
         $count = static::where('role', $role)->where('program', $program)->count();
 
@@ -83,17 +83,23 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsToMany(Task::class, 'task_approvers');
     }
 
+    public function anakDidik(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(AnakDidik::class, 'peserta_id');
+    }
+
+    public function kelompokDiampu(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Group::class, 'guru_id');
+    }
+
     public function isAdmin(): bool   { return $this->role === 'admin'; }
     public function isGuru(): bool    { return $this->role === 'guru'; }
     public function isPeserta(): bool { return $this->role === 'peserta'; }
 
     public function programLabel(): string
     {
-        return match ($this->program) {
-            'ojol_mengaji'  => 'Ojol Mengaji',
-            'tanwir_qurani' => 'Tanwir Qurani',
-            default         => 'Tanwir Qurani',
-        };
+        return 'Tanwir Qurani';
     }
 
     public function canAccessPanel(Panel $panel): bool

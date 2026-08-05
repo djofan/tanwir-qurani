@@ -14,6 +14,7 @@ class Group extends Model
         'description',
         'code',
         'program',
+        'guru_id',
     ];
 
     protected static function booted(): void
@@ -23,7 +24,7 @@ class Group extends Model
                 return;
             }
 
-            $prefix = $group->program === 'ojol_mengaji' ? 'OM' : 'TQ';
+            $prefix = 'TQ';
             $count  = static::where('program', $group->program)->count();
 
             do {
@@ -40,6 +41,11 @@ class Group extends Model
         return $this->hasMany(Profile::class);
     }
 
+    public function guru(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'guru_id');
+    }
+
     public function tasks(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Task::class, 'task_group');
@@ -47,10 +53,6 @@ class Group extends Model
 
     public function programLabel(): string
     {
-        return match ($this->program) {
-            'ojol_mengaji'  => 'Ojol Mengaji',
-            'tanwir_qurani' => 'Tanwir Qurani',
-            default         => '-',
-        };
+        return 'Tanwir Qurani';
     }
 }

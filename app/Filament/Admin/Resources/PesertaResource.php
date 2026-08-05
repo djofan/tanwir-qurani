@@ -61,18 +61,9 @@ class PesertaResource extends Resource
                             ->required()
                             ->maxLength(255),
 
-                        Select::make('program')
-                            ->label('Program')
-                            ->options([
-                                'tanwir_qurani' => 'Tanwir Qurani',
-                                'ojol_mengaji'  => 'Ojol Mengaji',
-                            ])
-                            ->required()
-                            ->native(false)
-                            ->live()
-                            ->disabled(fn (string $operation) => $operation === 'edit')
-                            ->dehydrated()
-                            ->helperText('Program menentukan kode login & kelompoknya. Ga bisa diubah setelah dibuat.'),
+                        Hidden::make('program')
+                            ->default('tanwir_qurani')
+                            ->dehydrated(),
 
                         TextInput::make('code')
                             ->label('Kode Login')
@@ -91,6 +82,9 @@ class PesertaResource extends Resource
                         TextInput::make('password')
                             ->label('Password')
                             ->password()
+                            ->revealable()
+                            ->autocomplete('new-password')
+                            ->extraInputAttributes(['autocomplete' => 'new-password'])
                             ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                             ->dehydrated(fn ($state) => filled($state))
                             ->required(fn (string $operation) => $operation === 'create')
@@ -278,16 +272,6 @@ class PesertaResource extends Resource
                     ->label('Nama')
                     ->searchable()
                     ->sortable(),
-
-                TextColumn::make('program')
-                    ->label('Program')
-                    ->formatStateUsing(fn (?string $state) => match ($state) {
-                        'ojol_mengaji'  => 'Ojol Mengaji',
-                        'tanwir_qurani' => 'Tanwir Qurani',
-                        default         => '-',
-                    })
-                    ->badge()
-                    ->color(fn (?string $state) => $state === 'ojol_mengaji' ? 'warning' : 'info'),
 
                 TextColumn::make('profile.group.name')
                     ->label('Kelompok')

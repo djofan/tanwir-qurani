@@ -5,6 +5,7 @@ namespace App\Filament\Guru\Pages;
 use App\Filament\Guru\Widgets\GuruApprovalWidget;
 use App\Filament\Guru\Widgets\GuruPesertaTable;
 use App\Filament\Guru\Widgets\GuruStatsOverview;
+use App\Filament\Guru\Widgets\ProgramBannerWidget;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
@@ -16,6 +17,7 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
+            ProgramBannerWidget::class,
             GuruStatsOverview::class,
             GuruApprovalWidget::class,
             GuruPesertaTable::class,

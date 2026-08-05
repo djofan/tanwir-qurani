@@ -308,7 +308,7 @@
                     </h1>
 
                     <p class="hero-desc">
-                        Tanwir Qurani & Ojol Mengaji membantu peserta mengirim setoran, mengikuti kuis, dan memantau perkembangan — sementara guru/musyrif bisa meninjau dan memberi feedback tanpa ribet. Cukup satu akun, satu kode login.
+                        Tanwir Qurani membantu peserta mengirim setoran, mengikuti kuis, dan memantau perkembangan — sementara guru bisa meninjau dan memberi feedback tanpa ribet. Cukup satu akun, satu kode login.
                     </p>
 
                     <div class="hero-actions">
@@ -321,16 +321,16 @@
 
                     <div class="hero-stats-row">
                         <div>
-                            <div class="stat-num"><span>2</span></div>
-                            <div class="stat-label">Program Aktif</div>
+                            <div class="stat-num"><span>100%</span></div>
+                            <div class="stat-label">Berbasis Syariah</div>
                         </div>
                         <div>
                             <div class="stat-num"><span>30+</span></div>
                             <div class="stat-label">Juz Terverifikasi</div>
                         </div>
                         <div>
-                            <div class="stat-num"><span>100%</span></div>
-                            <div class="stat-label">Berbasis Syariah</div>
+                            <div class="stat-num"><span>1</span></div>
+                            <div class="stat-label">Akun, Semua Fitur</div>
                         </div>
                     </div>
                 </div>
@@ -413,7 +413,7 @@
             <div>
                 <div class="cta-tag">Bergabung Sekarang</div>
                 <h2 class="cta-title">Siap melanjutkan progres kamu?</h2>
-                <p class="cta-sub">Terbuka untuk peserta & guru aktif LAZ SIP di program Tanwir Qurani maupun Ojol Mengaji. Masuk dengan kode akun yang sudah didaftarkan admin.</p>
+                <p class="cta-sub">Terbuka untuk peserta & guru aktif program Tanwir Qurani LAZ SIP. Masuk dengan kode akun yang sudah didaftarkan admin.</p>
             </div>
             <div class="cta-actions">
                 <a href="{{ url('/login') }}" class="btn-cta-white">Masuk Sekarang</a>

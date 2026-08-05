@@ -69,6 +69,13 @@ class HasilKuisPage extends Page implements HasTable
                     ->sortable(),
             ])
             ->defaultSort('score', 'desc')
+            ->filters([
+                Tables\Filters\TernaryFilter::make('is_late')
+                    ->label('Ketepatan')
+                    ->trueLabel('Terlambat')
+                    ->falseLabel('Tepat Waktu')
+                    ->placeholder('Semua'),
+            ])
             ->actions([
                 Action::make('lihatJawaban')
                     ->label('Lihat Jawaban')

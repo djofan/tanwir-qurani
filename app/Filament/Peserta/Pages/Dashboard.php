@@ -4,6 +4,7 @@ namespace App\Filament\Peserta\Pages;
 
 use App\Filament\Peserta\Widgets\PesertaShortcutTable;
 use App\Filament\Peserta\Widgets\PesertaStatsOverview;
+use App\Filament\Peserta\Widgets\ProgramBannerWidget;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
@@ -15,6 +16,7 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
+            ProgramBannerWidget::class,
             PesertaStatsOverview::class,
             PesertaShortcutTable::class,
         ];

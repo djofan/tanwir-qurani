@@ -38,9 +38,20 @@ class CodeLogin extends BaseLogin
             ->label('Kode Akun')
             ->placeholder('Contoh: GTQ001')
             ->required()
-            ->autocomplete()
-            ->autofocus()
-            ->extraInputAttributes(['autocapitalize' => 'characters']);
+            ->autocomplete('off')
+            ->extraInputAttributes(['autocapitalize' => 'characters', 'autocomplete' => 'off'])
+            ->autofocus();
+    }
+
+    protected function getPasswordFormComponent(): Component
+    {
+        return TextInput::make('password')
+            ->label('Password')
+            ->password()
+            ->revealable()
+            ->required()
+            ->autocomplete('off')
+            ->extraInputAttributes(['tabindex' => 2, 'autocomplete' => 'off']);
     }
 
     protected function getCredentialsFromFormData(array $data): array

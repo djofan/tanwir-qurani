@@ -58,7 +58,9 @@ class HasilTugasPage extends Page implements HasTable
                     }),
 
                 Tables\Columns\TextColumn::make('attempts_count')
-                    ->label('Percobaan Ke'),
+                    ->label('Percobaan Ke')
+                    ->badge()
+                    ->color('gray'),
 
                 Tables\Columns\TextColumn::make('is_late')
                     ->label('Ketepatan')
@@ -72,6 +74,20 @@ class HasilTugasPage extends Page implements HasTable
                     ->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
+            ->filters([
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'pending'  => 'Menunggu',
+                        'approved' => 'Disetujui',
+                        'rejected' => 'Ditolak',
+                    ]),
+                Tables\Filters\TernaryFilter::make('is_late')
+                    ->label('Ketepatan')
+                    ->trueLabel('Terlambat')
+                    ->falseLabel('Tepat Waktu')
+                    ->placeholder('Semua'),
+            ])
             ->actions([
                 Action::make('lihatRiwayat')
                     ->label('Lihat Riwayat')

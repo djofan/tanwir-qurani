@@ -2,6 +2,7 @@
 
 namespace App\Filament\Guru\Widgets;
 
+use App\Models\Group;
 use App\Models\Task;
 use App\Models\User;
 use Filament\Tables;
@@ -29,15 +30,8 @@ class GuruPesertaTable extends BaseWidget
             })
             ->pluck('id');
 
-        // Ambil semua group_id yang jadi target tugas-tugas di scope guru ini
-        $groupIds = Task::whereIn('id', $scopeTaskIds)
-            ->with('groups')
-            ->get()
-            ->pluck('groups')
-            ->flatten()
-            ->pluck('id')
-            ->unique()
-            ->values();
+        // Ambil kelompok yang PIC-nya adalah guru ini secara langsung
+        $groupIds = Group::where('guru_id', $guruId)->pluck('id');
 
         return $table
             ->query(

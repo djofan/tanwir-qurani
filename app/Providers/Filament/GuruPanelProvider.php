@@ -15,6 +15,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Openplain\FilamentShadcnTheme\Color as ShadcnColor;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -34,9 +35,13 @@ class GuruPanelProvider extends PanelProvider
             ->id('guru')
             ->path('guru')
             ->login(CodeLogin::class)
-            ->colors(['primary' => Color::Teal])
+            ->colors(fn () => [
+                'primary' => Auth::user()?->program === 'ojol_mengaji' ? ShadcnColor::Orange : ShadcnColor::Green,
+            ])
             ->favicon(asset('favicon.ico'))
             ->brandName(fn () => Auth::user()?->programLabel() ?? 'Tanwir Qurani')
+            ->brandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('2.5rem')
             ->discoverResources(in: app_path('Filament/Guru/Resources'), for: 'App\\Filament\\Guru\\Resources')
             ->discoverPages(in: app_path('Filament/Guru/Pages'), for: 'App\\Filament\\Guru\\Pages')
             ->discoverWidgets(in: app_path('Filament/Guru/Widgets'), for: 'App\\Filament\\Guru\\Widgets')

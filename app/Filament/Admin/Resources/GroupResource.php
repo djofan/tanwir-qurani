@@ -3,8 +3,12 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\GroupResource\Pages;
+use App\Filament\Admin\Resources\GroupResource\RelationManagers\ProfilesRelationManager;
 use App\Models\Group;
+use App\Models\User;
 use BackedEnum;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -39,15 +43,18 @@ class GroupResource extends Resource
             ->components([
                 Section::make('Informasi Kelompok')
                     ->schema([
-                        Select::make('program')
-                            ->label('Program')
-                            ->options([
-                                'tanwir_qurani' => 'Tanwir Qurani (kode: TQ)',
-                                'ojol_mengaji'  => 'Ojol Mengaji (kode: OM)',
-                            ])
-                            ->required()
+                        Hidden::make('program')
+                            ->default('tanwir_qurani')
+                            ->dehydrated(),
+
+                        Select::make('guru_id')
+                            ->label('PIC (Guru)')
+                            ->options(fn () => User::where('role', 'guru')->pluck('name', 'id'))
+                            ->searchable()
                             ->native(false)
-                            ->helperText('Kode kelompok otomatis dibuat urut sesuai program: TQ001, TQ002, dst / OM001, OM002, dst'),
+                            ->required()
+                            ->helperText('Guru yang menaungi & bertanggung jawab atas kelompok ini')
+                            ->columnSpanFull(),
 
                         TextInput::make('name')
                             ->label('Nama Kelompok')
@@ -60,6 +67,19 @@ class GroupResource extends Resource
                             ->rows(3)
                             ->columnSpanFull(),
                     ])->columns(2),
+
+                Section::make('Ringkasan')
+                    ->visible(fn (?Group $record) => $record !== null)
+                    ->columns(2)
+                    ->schema([
+                        Placeholder::make('profiles_count')
+                            ->label('Jumlah Anggota')
+                            ->content(fn (?Group $record) => $record ? $record->profiles()->count() . ' orang' : '-'),
+
+                        Placeholder::make('tasks_count')
+                            ->label('Tugas Terkirim')
+                            ->content(fn (?Group $record) => $record ? $record->tasks()->count() . ' tugas' : '-'),
+                    ]),
             ]);
     }
 
@@ -78,15 +98,12 @@ class GroupResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('program')
-                    ->label('Program')
-                    ->formatStateUsing(fn (?string $state) => match ($state) {
-                        'ojol_mengaji'  => 'Ojol Mengaji',
-                        'tanwir_qurani' => 'Tanwir Qurani',
-                        default         => '-',
-                    })
+                TextColumn::make('guru.name')
+                    ->label('PIC (Guru)')
                     ->badge()
-                    ->color(fn (?string $state) => $state === 'ojol_mengaji' ? 'warning' : 'info'),
+                    ->color('warning')
+                    ->default('Belum ada PIC')
+                    ->searchable(),
 
                 TextColumn::make('description')
                     ->label('Deskripsi')
@@ -119,6 +136,13 @@ class GroupResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            ProfilesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
