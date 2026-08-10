@@ -40,8 +40,13 @@ class PesertaStatsOverview extends BaseWidget
 
         return [
             Stat::make('Belum Dikerjakan', $belumDikerjakan)
-                ->description('Tugas yang belum disentuh')
-                ->color('gray'),
+                ->description($belumDikerjakan > 0 ? '⚠️ Ada tugas yang belum kamu sentuh' : 'Semua tugas sudah dikerjakan 🎉')
+                ->descriptionIcon($belumDikerjakan > 0 ? 'heroicon-m-exclamation-triangle' : 'heroicon-m-check-circle')
+                ->color($belumDikerjakan > 0 ? 'danger' : 'success')
+                ->icon('heroicon-o-clipboard-document-list')
+                ->extraAttributes($belumDikerjakan > 0 ? [
+                    'class' => 'ring-2 ring-danger-400 ring-offset-2 ring-offset-white dark:ring-offset-gray-900 animate-pulse',
+                ] : []),
 
             Stat::make('Menunggu Koreksi', $menunggu)
                 ->description('Sudah dikumpul, belum dinilai')

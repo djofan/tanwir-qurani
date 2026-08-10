@@ -30,8 +30,13 @@ class GuruStatsOverview extends BaseWidget
 
         return [
             Stat::make('Butuh Diperiksa', $butuhPeriksa)
-                ->description('Tugas saya / yang saya approve')
-                ->color('warning'),
+                ->description($butuhPeriksa > 0 ? '⚠️ Ada setoran menunggu koreksi kamu' : 'Semua sudah diperiksa 🎉')
+                ->descriptionIcon($butuhPeriksa > 0 ? 'heroicon-m-exclamation-triangle' : 'heroicon-m-check-circle')
+                ->color($butuhPeriksa > 0 ? 'danger' : 'success')
+                ->icon('heroicon-o-inbox')
+                ->extraAttributes($butuhPeriksa > 0 ? [
+                    'class' => 'ring-2 ring-danger-400 ring-offset-2 ring-offset-white dark:ring-offset-gray-900 animate-pulse',
+                ] : []),
 
             Stat::make('Tugas Saya', $tugasSaya)
                 ->description('Tugas yang saya buat')

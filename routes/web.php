@@ -8,6 +8,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/tentang', function () {
+    return view('tentang');
+})->name('tentang');
+
+Route::get('/program', function () {
+    return view('program');
+})->name('program');
+
+Route::get('/faq', function () {
+    return view('faq');
+})->name('faq');
+
+Route::get('/kontak', function () {
+    return view('kontak');
+})->name('kontak');
+
 Route::get('/login', [PortalLoginController::class, 'show'])->name('login');
 Route::post('/login', [PortalLoginController::class, 'login']);
 Route::post('/logout-portal', [PortalLoginController::class, 'logout'])->name('portal.logout');

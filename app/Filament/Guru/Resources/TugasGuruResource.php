@@ -75,41 +75,13 @@ class TugasGuruResource extends Resource
                             ->rows(4)
                             ->columnSpanFull(),
 
-                        Select::make('group_ids')
-                            ->label('Kirim ke Kelompok')
-                            ->options(fn () => \App\Models\Group::where('program', Auth::user()->program)->pluck('name', 'id'))
-                            ->multiple()
-                            ->required()
-                            ->preload()
-                            ->searchable()
-                            ->afterStateHydrated(function ($component, $record) {
-                                $component->state($record?->groups?->pluck('id')->toArray() ?? []);
-                            })
-                            ->placeholder('Pilih satu atau lebih kelompok')
-                            ->helperText('Kamu cuma bisa kirim tugas ke kelompok se-program kamu (' . (Auth::user()?->programLabel() ?? '-') . ')')
-                            ->columnSpanFull(),
-
                         DateTimePicker::make('deadline')
                             ->label('Deadline')
                             ->native(false)
                             ->seconds(false)
                             ->minDate(now())
-                            ->helperText('Kosongkan kalau tugas ini bebas, tanpa batas waktu'),
-
-                        Select::make('approver_ids')
-                            ->label('Guru Lain yang Bisa Approve/Reject')
-                            ->options(fn () => User::where('role', 'guru')
-                                ->where('id', '!=', Auth::id())
-                                ->where('program', Auth::user()->program)
-                                ->pluck('name', 'id'))
-                            ->multiple()
-                            ->preload()
-                            ->searchable()
-                            ->afterStateHydrated(function ($component, $record) {
-                                $component->state($record?->approvers?->pluck('id')->toArray() ?? []);
-                            })
-                            ->placeholder('Opsional, kosongkan kalau cuma kamu yang review')
-                            ->helperText('Cuma guru se-program (' . (Auth::user()?->programLabel() ?? '-') . ') yang bisa dipilih jadi approver'),
+                            ->required()
+                            ->helperText('Wajib diisi — batas waktu pengumpulan tugas ini'),
 
                     ])->columns(2),
 
@@ -135,10 +107,12 @@ class TugasGuruResource extends Resource
                                     ->required(),
 
                                 TextInput::make('option_c')
-                                    ->label('Pilihan C (opsional)'),
+                                    ->label('Pilihan C')
+                                    ->required(),
 
                                 TextInput::make('option_d')
-                                    ->label('Pilihan D (opsional)'),
+                                    ->label('Pilihan D')
+                                    ->required(),
 
                                 Radio::make('correct_option')
                                     ->label('Jawaban Benar')

@@ -3,14 +3,16 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
 
 @php
-    $myGroup = auth()->user()->profile?->group?->name ?? 'Belum ditentukan';
+    $myProfile = auth()->user()->profile;
+    $myGroup = $myProfile?->group?->name ?? 'Belum ditentukan';
+    $myPic = $myProfile?->group?->guru?->name;
 @endphp
 
 <div style="position:relative;background:linear-gradient(145deg,#0f1117,#16181f);border-radius:18px;padding:1px;overflow:hidden;margin-bottom:20px;">
     <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(167,139,250,0.45),transparent 45%,transparent 60%,rgba(167,139,250,0.1));border-radius:18px;"></div>
     <div style="position:relative;background:#0d0f15;border-radius:17px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
 
-        <div style="display:flex;align-items:center;gap:14px;">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
             <div style="width:46px;height:46px;border-radius:13px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);display:flex;align-items:center;justify-content:center;">
                 <i class="ti ti-users-group" style="font-size:22px;color:#a78bfa;"></i>
             </div>
@@ -18,6 +20,13 @@
                 <p style="font-size:11px;font-weight:500;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 2px;">Kelompok kamu</p>
                 <p style="font-size:19px;font-weight:500;color:#f1f5f9;margin:0;">{{ $myGroup }}</p>
             </div>
+            @if($myPic)
+                <div style="width:1px;height:34px;background:rgba(148,163,184,0.15);"></div>
+                <div>
+                    <p style="font-size:11px;font-weight:500;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 2px;">PIC / Guru Pembina</p>
+                    <p style="font-size:15px;font-weight:600;color:#e2e8f0;margin:0;">{{ $myPic }}</p>
+                </div>
+            @endif
         </div>
 
         @if($myGroup !== 'Belum ditentukan')
@@ -66,6 +75,10 @@
 
                 @if($task->is_late)
                     <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;background:rgba(249,115,22,0.15);color:#fb923c;">⏰ Terlambat</span>
+                @endif
+
+                @if($task->submission && $task->submission->attempts_count)
+                    <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:600;background:rgba(148,163,184,0.12);color:#94a3b8;">Percobaan ke-{{ $task->submission->attempts_count }}</span>
                 @endif
             </div>
 

@@ -5,13 +5,11 @@ namespace App\Filament\Guru\Resources\TugasGuruResource\Pages;
 use App\Filament\Guru\Resources\TugasGuruResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Auth;
 
 class EditTugasGuru extends EditRecord
 {
     protected static string $resource = TugasGuruResource::class;
-
-    protected array $approverIds = [];
-    protected array $groupIds = [];
 
     protected function getHeaderActions(): array
     {
@@ -20,19 +18,12 @@ class EditTugasGuru extends EditRecord
         ];
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        $this->approverIds = $data['approver_ids'] ?? [];
-        $this->groupIds    = $data['group_ids'] ?? [];
-        unset($data['approver_ids'], $data['group_ids']);
-
-        return $data;
-    }
-
     protected function afterSave(): void
     {
-        $this->record->approvers()->sync($this->approverIds);
-        $this->record->groups()->sync($this->groupIds);
+        // Pastikan tetap konsisten ke kelompok yang di-PIC-in guru ini
+        $groupIds = \App\Models\Group::where('guru_id', Auth::id())->pluck('id');
+
+        $this->record->groups()->sync($groupIds);
     }
 
     protected function getRedirectUrl(): string

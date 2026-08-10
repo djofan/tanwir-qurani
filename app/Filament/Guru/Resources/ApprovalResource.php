@@ -202,7 +202,11 @@ class ApprovalResource extends Resource
                     }),
             ])
             ->actions([
-                ViewAction::make()->label('Review'),
+                ViewAction::make()
+                    ->label('Review')
+                    ->color('primary')
+                    ->icon('heroicon-o-magnifying-glass')
+                    ->button(),
 
                 Action::make('approve')
                     ->label('Approve')

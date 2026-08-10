@@ -3,6 +3,7 @@
 namespace App\Filament\Peserta\Widgets;
 
 use Filament\Widgets\Widget;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class ProgramBannerWidget extends Widget
@@ -15,8 +16,12 @@ class ProgramBannerWidget extends Widget
 
     public function getViewData(): array
     {
+        $user = Auth::user();
+
         return [
-            'name' => Auth::user()?->name,
+            'name'      => $user?->name,
+            'today'     => Carbon::now()->translatedFormat('l, d F Y'),
+            'groupName' => $user?->profile?->group?->name,
         ];
     }
 }

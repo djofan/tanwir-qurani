@@ -3,18 +3,17 @@
 namespace App\Filament\Guru\Resources\AnakDidikGuruResource\Pages;
 
 use App\Filament\Guru\Resources\AnakDidikGuruResource;
-use Filament\Actions\CreateAction;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Actions\DeleteAction;
+use Filament\Resources\Pages\EditRecord;
 
-class ListAnakDidikGurus extends ListRecords
+class EditAnakDidikGuru extends EditRecord
 {
     protected static string $resource = AnakDidikGuruResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()
-                ->label('Tambah Anak Didik'),
+            DeleteAction::make(),
         ];
     }
 }

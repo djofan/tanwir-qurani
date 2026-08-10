@@ -5,8 +5,18 @@ namespace App\Filament\Guru\Resources;
 use App\Filament\Guru\Resources\AnakDidikGuruResource\Pages;
 use App\Models\AnakDidik;
 use App\Models\Group;
+use App\Models\User;
 use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -30,24 +40,16 @@ class AnakDidikGuruResource extends Resource
 
     protected static ?int $navigationSort = 6;
 
-    public static function canCreate(): bool
+    /**
+     * Peserta (guru ngaji) yang ada di kelompok-kelompok yang di-PIC-in guru ini.
+     */
+    protected static function pesertaOptions()
     {
-        return false;
-    }
+        $groupIds = Group::where('guru_id', Auth::id())->pluck('id');
 
-    public static function canEdit($record): bool
-    {
-        return false;
-    }
-
-    public static function canDelete($record): bool
-    {
-        return false;
-    }
-
-    public static function canDeleteAny(): bool
-    {
-        return false;
+        return User::where('role', 'peserta')
+            ->whereHas('profile', fn (Builder $q) => $q->whereIn('group_id', $groupIds))
+            ->pluck('name', 'id');
     }
 
     public static function getEloquentQuery(): Builder
@@ -61,6 +63,57 @@ class AnakDidikGuruResource extends Resource
                 $q->whereIn('group_id', $groupIds);
             })
             ->with(['peserta.profile.group']);
+    }
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make('Data Anak')
+                    ->columns(2)
+                    ->schema([
+                        Select::make('peserta_id')
+                            ->label('Peserta (Guru Ngaji)')
+                            ->options(fn () => static::pesertaOptions())
+                            ->searchable()
+                            ->required()
+                            ->native(false)
+                            ->helperText('Cuma peserta di kelompok yang kamu naungi yang bisa dipilih')
+                            ->columnSpanFull(),
+
+                        TextInput::make('nama')
+                            ->label('Nama Anak')
+                            ->required()
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+
+                        TextInput::make('usia')
+                            ->label('Usia')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(99)
+                            ->suffix('tahun'),
+
+                        TextInput::make('kelas')
+                            ->label('Kelas')
+                            ->placeholder('Contoh: Iqro 3, Al-Qur\'an Juz 5, TK B')
+                            ->maxLength(255),
+
+                        TextInput::make('nama_orang_tua')
+                            ->label('Nama Orang Tua / Wali')
+                            ->maxLength(255),
+
+                        TextInput::make('nomor_orang_tua')
+                            ->label('Nomor HP Orang Tua / Wali')
+                            ->tel()
+                            ->maxLength(30),
+
+                        Textarea::make('progres_belajar')
+                            ->label('Progres Belajar / Hafalan')
+                            ->rows(3)
+                            ->columnSpanFull(),
+                    ]),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -119,13 +172,24 @@ class AnakDidikGuruResource extends Resource
                     ->label('Guru Ngaji (Peserta)')
                     ->relationship('peserta', 'name'),
             ])
+            ->actions([
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
+            ->bulkActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ])
             ->emptyStateHeading('Belum ada data anak didik dari peserta di kelompok Anda');
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAnakDidikGurus::route('/'),
+            'index'  => Pages\ListAnakDidikGurus::route('/'),
+            'create' => Pages\CreateAnakDidikGuru::route('/create'),
+            'edit'   => Pages\EditAnakDidikGuru::route('/{record}/edit'),
         ];
     }
 }
