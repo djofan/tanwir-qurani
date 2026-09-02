@@ -40,6 +40,8 @@ class GuruPanelProvider extends PanelProvider
             ])
             ->favicon(asset('favicon.ico'))
             ->brandName(fn () => Auth::user()?->programLabel() ?? 'Tanwir Qurani')
+            ->defaultThemeMode(\Filament\Enums\ThemeMode::Light)
+            ->renderHook('panels::head.end', fn () => '<style>.fi-theme-switcher{display:none!important}</style>')
             ->brandLogo(asset('images/logo.png'))
             ->brandLogoHeight('2.5rem')
             ->discoverResources(in: app_path('Filament/Guru/Resources'), for: 'App\\Filament\\Guru\\Resources')

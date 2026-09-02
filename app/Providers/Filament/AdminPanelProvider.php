@@ -35,6 +35,8 @@ class AdminPanelProvider extends PanelProvider
             ->login(CodeLogin::class)
             ->colors(['primary' => ShadcnColor::Green])
             ->brandName('Tanwir Qurani')
+            ->defaultThemeMode(\Filament\Enums\ThemeMode::Light)
+            ->renderHook('panels::head.end', fn () => '<style>.fi-theme-switcher{display:none!important}</style>')
             ->brandLogo(asset('images/logo.png'))
             ->brandLogoHeight('2.5rem')
             ->favicon(asset('favicon.ico'))
