@@ -1,183 +1,4 @@
 <x-filament-panels::page>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        .kerjakan-page * { font-family: 'Plus Jakarta Sans', sans-serif; }
-
-        .task-hero {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%);
-            border-radius: 20px; padding: 26px 28px;
-            position: relative; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.07);
-            margin-bottom: 0;
-        }
-        .task-hero::before {
-            content:''; position:absolute; top:-70px; right:-70px;
-            width:220px; height:220px;
-            background: radial-gradient(circle, rgba(99,102,241,0.22) 0%, transparent 70%);
-            border-radius:50%; pointer-events:none;
-        }
-        .task-hero::after {
-            content:''; position:absolute; bottom:-50px; left:30px;
-            width:160px; height:160px;
-            background: radial-gradient(circle, rgba(34,211,238,0.10) 0%, transparent 70%);
-            border-radius:50%; pointer-events:none;
-        }
-        .hero-inner { position:relative; z-index:1; }
-        .type-badge {
-            display:inline-flex; align-items:center; gap:6px;
-            padding:4px 14px; border-radius:999px;
-            font-size:11.5px; font-weight:700;
-        }
-        .badge-voice { background:rgba(99,102,241,0.2); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3); }
-        .badge-video { background:rgba(251,146,60,0.2); color:#fdba74; border:1px solid rgba(251,146,60,0.3); }
-        .badge-quiz  { background:rgba(34,197,94,0.2);  color:#86efac; border:1px solid rgba(34,197,94,0.3); }
-        .hero-title  { font-size:20px; font-weight:800; color:#f1f5f9; line-height:1.3; margin:12px 0 3px; }
-        .hero-teacher { font-size:13px; color:#64748b; }
-        .hero-teacher span { color:#94a3b8; }
-        .hero-desc {
-            margin-top:16px; padding:14px 18px;
-            background:rgba(255,255,255,0.04);
-            border:1px solid rgba(255,255,255,0.08); border-radius:12px;
-        }
-        .hero-desc-label {
-            font-size:10px; font-weight:700; letter-spacing:0.09em;
-            text-transform:uppercase; color:#475569; margin-bottom:5px;
-        }
-        .hero-desc-text { font-size:13.5px; color:#94a3b8; line-height:1.65; }
-        .hero-alert {
-            display:flex; gap:10px; align-items:flex-start;
-            margin-top:14px; padding:13px 15px;
-            background:rgba(239,68,68,0.10);
-            border:1px solid rgba(239,68,68,0.25); border-radius:12px;
-        }
-        .hero-alert-title { font-size:13px; font-weight:700; color:#fca5a5; margin-bottom:3px; }
-        .hero-alert-body  { font-size:12.5px; color:#f87171; line-height:1.55; }
-
-        .mode-tabs {
-            display:grid; grid-template-columns:1fr 1fr;
-            gap:6px; margin-bottom:20px;
-            background:#f8fafc; border-radius:12px; padding:5px;
-        }
-        .dark .mode-tabs { background:rgba(255,255,255,0.04); }
-        .mode-tab-active {
-            background:#fff !important; color:#1e293b !important;
-            border-color:#fff !important;
-            box-shadow:0 1px 4px rgba(0,0,0,0.10) !important;
-        }
-        .dark .mode-tab-active {
-            background:#1e293b !important; color:#e2e8f0 !important;
-            border-color:#1e293b !important;
-        }
-
-        .rec-time {
-            font-size:28px; font-weight:800; font-variant-numeric:tabular-nums;
-            color:#1e293b; letter-spacing:0.03em;
-        }
-        .dark .rec-time { color:#e2e8f0; }
-
-        .step-box { border-radius:14px; padding:16px 18px; margin-bottom:12px; }
-        .step-blue  { background:#eff6ff; border:1px solid #bfdbfe; }
-        .dark .step-blue  { background:rgba(59,130,246,0.07); border-color:rgba(59,130,246,0.2); }
-        .step-amber { background:#fffbeb; border:1px solid #fde68a; }
-        .dark .step-amber { background:rgba(245,158,11,0.07); border-color:rgba(245,158,11,0.2); }
-        .step-num {
-            display:inline-flex; align-items:center; justify-content:center;
-            width:20px; height:20px; border-radius:999px;
-            font-size:11px; font-weight:800; margin-right:6px; vertical-align:middle;
-        }
-        .step-num-blue  { background:#3b82f6; color:white; }
-        .step-num-amber { background:#f59e0b; color:white; }
-        .step-title-blue  { font-size:13px; font-weight:700; color:#1d4ed8; margin-bottom:10px; }
-        .dark .step-title-blue  { color:#93c5fd; }
-        .step-title-amber { font-size:13px; font-weight:700; color:#b45309; margin-bottom:6px; }
-        .dark .step-title-amber { color:#fcd34d; }
-        .step-hint { font-size:12px; color:#92400e; margin-bottom:10px; line-height:1.55; }
-        .dark .step-hint { color:#fbbf24; }
-        
-        /* Utility Buttons */
-        .btn-gform {
-            display:inline-flex; align-items:center; gap:8px;
-            padding:9px 20px; border-radius:10px; font-size:13px; font-weight:700;
-            background:linear-gradient(135deg,#3b82f6,#2563eb); color:white;
-            text-decoration:none; box-shadow:0 2px 10px rgba(59,130,246,0.3); transition:all 0.15s;
-        }
-        .btn-gform:hover { box-shadow:0 4px 16px rgba(59,130,246,0.4); transform:translateY(-1px); }
-
-        /* Modernized Recorder Buttons Fix */
-        .btn-rec-start {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 12px 28px; border-radius: 14px; font-size: 13.5px; font-weight: 700;
-            background: linear-gradient(135deg, #4f46e5, #3730a3); color: white;
-            border: 1px solid rgba(255, 255, 255, 0.15); cursor: pointer; 
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3); transition: all 0.2s ease-in-out;
-        }
-        .btn-rec-start:hover { box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45); transform: translateY(-1px); }
-        
-        .btn-rec-stop {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 12px 28px; border-radius: 14px; font-size: 13.5px; font-weight: 700;
-            background: linear-gradient(135deg, #1e293b, #0f172a); color: #f1f5f9;
-            border: 1px solid rgba(255, 255, 255, 0.15); cursor: pointer; 
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); transition: all 0.2s ease-in-out;
-        }
-        .btn-rec-stop:hover { border-color: rgba(255, 255, 255, 0.3); transform: translateY(-1px); }
-
-        .btn-rec-repeat {
-            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-            padding: 12px 24px; border-radius: 14px; font-size: 13.5px; font-weight: 600;
-            background: rgba(255, 255, 255, 0.03); border: 1.5px solid rgba(148, 163, 184, 0.2); color: #e2e8f0;
-            cursor: pointer; transition: all 0.15s;
-        }
-        .btn-rec-repeat:hover { border-color: #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.03); }
-
-        .upload-hint {
-            font-size:13px; color:#64748b; line-height:1.6;
-            padding:11px 14px; background:#f8fafc;
-            border-radius:10px; border:1px dashed #e2e8f0;
-            margin-bottom: 4px;
-        }
-        .dark .upload-hint { background:rgba(255,255,255,0.03); border-color:rgba(255,255,255,0.1); color:#94a3b8; }
-        .upload-hint strong { color:#f59e0b; }
-
-        /* Custom File Upload Area */
-        .custom-upload-btn {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 24px; border: 2px dashed #d1d5db; border-radius: 12px;
-            background: #fdfdfd; cursor: pointer; transition: all 0.2s ease-in-out;
-        }
-        .dark .custom-upload-btn { background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.15); }
-        .custom-upload-btn:hover { border-color: #f59e0b; background: #fffbeb; }
-        .dark .custom-upload-btn:hover { background: rgba(245, 158, 11, 0.05); }
-
-        .action-bar {
-            display:flex; gap:10px; align-items:center;
-            padding:14px 18px; background:#f8fafc;
-            border:1px solid #e2e8f0; border-radius:16px;
-            justify-content: space-between;
-        }
-        .dark .action-bar { background:rgba(255,255,255,0.03); border-color:rgba(255,255,255,0.07); }
-        .btn-cancel {
-            display:inline-flex; align-items:center;
-            padding:9px 18px; border-radius:10px;
-            background:white; border:1.5px solid #e2e8f0;
-            color:#374151; font-size:13px; font-weight:600;
-            text-decoration:none; transition:all 0.15s;
-        }
-        .dark .btn-cancel { background:#1e293b; border-color:#334155; color:#e2e8f0; }
-        .btn-cancel:hover { border-color:#94a3b8; }
-        .btn-submit-primary {
-            display:inline-flex; align-items:center; gap:6px;
-            padding:9px 22px; border-radius:10px; font-size:13px; font-weight:700;
-            background:linear-gradient(135deg,#f59e0b,#d97706); color:white;
-            border:none; cursor:pointer;
-            box-shadow:0 2px 10px rgba(245,158,11,0.35); transition:all 0.15s;
-        }
-        .btn-submit-primary:hover:not(:disabled) {
-            box-shadow:0 4px 16px rgba(245,158,11,0.45); transform:translateY(-1px);
-        }
-        .btn-submit-primary:disabled { background:#d1d5db; color:#9ca3af; cursor:not-allowed; box-shadow:none; }
-        audio, video { border-radius:10px; }
-    </style>
 
     <div class="kerjakan-page max-w-2xl mx-auto"
         style="display:flex; flex-direction:column; gap:18px;"
@@ -185,34 +6,35 @@
             x-data="recorderApp(@js($this->task->type))" x-init="init()"
         @endif
     >
-        <div class="task-hero">
-            <div class="hero-inner">
+        {{-- Hero Header Tugas --}}
+        <div style="background: var(--fi-card-bg, #ffffff); border-radius: 20px; padding: 26px 28px; border: 1px solid rgba(148,163,184,0.25); box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; overflow: hidden;">
+            <div style="position: relative; z-index: 1;">
                 @if($this->task->type === 'voice_note')
-                    <span class="type-badge badge-voice">🎵 Voice Note</span>
+                    <span style="display:inline-flex; align-items:center; gap:6px; background:rgba(59,130,246,0.1); color:#1d4ed8; border:1px solid rgba(59,130,246,0.2); padding:4px 14px; border-radius:999px; font-size:11.5px; font-weight:700;">🎵 Voice Note</span>
                 @elseif($this->task->type === 'video')
-                    <span class="type-badge badge-video">🎬 Video</span>
+                    <span style="display:inline-flex; align-items:center; gap:6px; background:rgba(245,158,11,0.1); color:#b45309; border:1px solid rgba(245,158,11,0.2); padding:4px 14px; border-radius:999px; font-size:11.5px; font-weight:700;">🎬 Video</span>
                 @else
-                    <span class="type-badge badge-quiz">📝 Kuis</span>
+                    <span style="display:inline-flex; align-items:center; gap:6px; background:rgba(34,197,94,0.1); color:#15803d; border:1px solid rgba(34,197,94,0.2); padding:4px 14px; border-radius:999px; font-size:11.5px; font-weight:700;">📝 Kuis</span>
                 @endif
 
-                <p class="hero-title">{{ $this->task->title }}</p>
-                <p class="hero-teacher">Diberikan oleh <span>{{ $this->task->teacher?->name }}</span></p>
+                <p style="font-size:20px; font-weight:800; color:#0f172a; line-height:1.3; margin:12px 0 3px;">{{ $this->task->title }}</p>
+                <p style="font-size:13px; color:#64748b;">Diberikan oleh <span style="color:#334155; font-weight:600;">{{ $this->task->teacher?->name }}</span></p>
 
-                <div class="hero-desc">
-                    <p class="hero-desc-label">Perintah Tugas</p>
-                    <p class="hero-desc-text">{{ $this->task->description }}</p>
+                <div style="margin-top:16px; padding:14px 18px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px;">
+                    <p style="font-size:10px; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; color:#475569; margin-bottom:5px;">Perintah Tugas</p>
+                    <p style="font-size:13.5px; color:#334155; line-height:1.65;">{{ $this->task->description }}</p>
                 </div>
 
                 @if($this->submission?->status === 'rejected')
                     @php $lastLog = $this->submission->logs()->latest()->first(); @endphp
-                    <div class="hero-alert">
-                        <div style="font-size:15px;line-height:1;">⚠️</div>
+                    <div style="display:flex; gap:10px; align-items:flex-start; margin-top:14px; padding:13px 15px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:12px;">
+                        <div style="font-size:15px; line-height:1;">⚠️</div>
                         <div>
-                            <p class="hero-alert-title">Percobaan sebelumnya ditolak</p>
+                            <p style="font-size:13px; font-weight:700; color:#b91c1c; margin-bottom:3px;">Percobaan sebelumnya ditolak</p>
                             @if($lastLog)
-                                <p class="hero-alert-body">{{ $lastLog->feedback }}</p>
+                                <p style="font-size:12.5px; color:#dc2626; line-height:1.55;">{{ $lastLog->feedback }}</p>
                             @else
-                                <p class="hero-alert-body">Silakan perbaiki dan kirim ulang.</p>
+                                <p style="font-size:12.5px; color:#dc2626; line-height:1.55;">Silakan perbaiki dan kirim ulang.</p>
                             @endif
                         </div>
                     </div>
@@ -221,50 +43,50 @@
         </div>
 
         @if($this->task->type === 'quiz')
-            <x-filament::card>
+            <x-filament::card style="background: var(--fi-card-bg, #ffffff); border: 1px solid rgba(148,163,184,0.25); border-radius: 18px;">
                 @if($this->task->google_form_url)
-                    <div class="step-box step-blue">
-                        <p class="step-title-blue">
-                            <span class="step-num step-num-blue">1</span>
+                    <div style="border-radius:14px; padding:16px 18px; margin-bottom:12px; background:#eff6ff; border:1px solid #bfdbfe;">
+                        <p style="font-size:13px; font-weight:700; color:#1d4ed8; margin-bottom:10px;">
+                            <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:999px; font-size:11px; font-weight:800; margin-right:6px; vertical-align:middle; background:#3b82f6; color:white;">1</span>
                             Kerjakan kuis di Google Form
                         </p>
-                        <a href="{{ $this->task->google_form_url }}" target="_blank" class="btn-gform">
+                        <a href="{{ $this->task->google_form_url }}" target="_blank" style="display:inline-flex; align-items:center; gap:8px; padding:9px 20px; border-radius:10px; font-size:13px; font-weight:700; background:linear-gradient(135deg,#3b82f6,#2563eb); color:white; text-decoration:none; box-shadow:0 2px 10px rgba(59,130,246,0.3);">
                             🔗 Buka Google Form
                         </a>
                     </div>
                 @endif
 
-                <div class="step-box step-amber" style="margin-bottom:0;">
-                    <p class="step-title-amber">
-                        <span class="step-num step-num-amber">2</span>
+                <div style="border-radius:14px; padding:16px 18px; margin-bottom:0; background:#fffbeb; border:1px solid #fde68a;">
+                    <p style="font-size:13px; font-weight:700; color:#b45309; margin-bottom:6px;">
+                        <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:999px; font-size:11px; font-weight:800; margin-right:6px; vertical-align:middle; background:#f59e0b; color:white;">2</span>
                         Upload screenshot bukti pengerjaan
                     </p>
-                    <p class="step-hint">Screenshot halaman konfirmasi Google Form setelah submit. Format: JPG, PNG, WEBP — Maks 10MB.</p>
+                    <p style="font-size:12.5px; color:#92400e; margin-bottom:10px; line-height:1.55;">Screenshot halaman konfirmasi Google Form setelah submit. Format: JPG, PNG, WEBP — Maks 10MB.</p>
 
-                    <label class="custom-upload-btn">
+                    <label style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; border: 2px dashed #cbd5e1; border-radius: 12px; background: #ffffff; cursor: pointer;">
                         <input type="file"
                             wire:model="screenshotFile"
                             accept="image/jpeg,image/png,image/webp"
-                            class="hidden">
+                            style="display:none;">
                         <span style="font-size: 24px; margin-bottom: 6px;">🖼️</span>
                         <span style="font-size: 13.5px; font-weight: 700; color: #d97706;" x-text="$wire.screenshotFile ? '✓ File Terpilih' : 'Pilih Gambar Screenshot'"></span>
                     </label>
 
-                    <div wire:loading wire:target="screenshotFile" class="mt-2 text-sm text-amber-600">
+                    <div wire:loading wire:target="screenshotFile" style="margin-top:8px; font-size:13px; color:#d97706;">
                         ⏳ Mengupload...
                     </div>
                     @error('screenshotFile')
-                        <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                        <p style="margin-top:8px; font-size:13px; color:#dc2626;">{{ $message }}</p>
                     @enderror
                 </div>
             </x-filament::card>
 
-            <div class="action-bar">
-                <a href="{{ route('filament.peserta.pages.tugas') }}" class="btn-cancel">← Batal</a>
+            <div style="display:flex; gap:10px; align-items:center; padding:14px 18px; background:var(--fi-card-bg, #ffffff); border:1px solid rgba(148,163,184,0.25); border-radius:16px; justify-content:space-between; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                <a href="{{ route('filament.peserta.pages.tugas') }}" style="display:inline-flex; align-items:center; padding:9px 18px; border-radius:10px; background:white; border:1.5px solid #cbd5e1; color:#374151; font-size:13px; font-weight:600; text-decoration:none;">← Batal</a>
                 <button type="button"
                     wire:click="submit"
                     wire:loading.attr="disabled"
-                    class="btn-submit-primary">
+                    style="display:inline-flex; align-items:center; gap:6px; padding:9px 22px; border-radius:10px; font-size:13px; font-weight:700; background:linear-gradient(135deg,#f59e0b,#d97706); color:white; border:none; cursor:pointer; box-shadow:0 2px 10px rgba(245,158,11,0.35);">
                     <span wire:loading.remove wire:target="submit">
                         {{ $this->submission?->status === 'rejected' ? '📤 Kirim Bukti Ulang' : '📤 Kirim Bukti' }}
                     </span>
@@ -274,20 +96,22 @@
 
         @else
 
-            <x-filament::card>
-                <div class="mode-tabs">
+            <x-filament::card style="background: var(--fi-card-bg, #ffffff); border: 1px solid rgba(148,163,184,0.25); border-radius: 18px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:20px; background:#f1f5f9; border-radius:12px; padding:5px;">
                     <button type="button"
                         wire:click="setMode('record')"
                         @click="resetRecorder()"
+                        style="display:flex; align-items:center; justify-content:center;"
                         class="flex-1 py-2 px-4 rounded-lg text-sm font-medium border transition
-                            {{ $this->mode === 'record' ? 'mode-tab-active bg-white border-white text-gray-900' : 'border-transparent text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            {{ $this->mode === 'record' ? 'bg-white border-white text-gray-900 shadow-sm' : 'border-transparent text-gray-600 hover:bg-gray-200' }}">
                         🎙️ Rekam Langsung
                     </button>
                     <button type="button"
                         wire:click="setMode('upload')"
                         @click="resetRecorder()"
+                        style="display:flex; align-items:center; justify-content:center;"
                         class="flex-1 py-2 px-4 rounded-lg text-sm font-medium border transition
-                            {{ $this->mode === 'upload' ? 'mode-tab-active bg-white border-white text-gray-900' : 'border-transparent text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                            {{ $this->mode === 'upload' ? 'bg-white border-white text-gray-900 shadow-sm' : 'border-transparent text-gray-600 hover:bg-gray-200' }}">
                         📁 Upload File
                     </button>
                 </div>
@@ -300,29 +124,29 @@
                                 style="background:#0f172a;"
                                 x-show="isRecording">
                             </canvas>
-                            <p class="rec-time"
+                            <p style="font-size:28px; font-weight:800; font-variant-numeric:tabular-nums; color:#0f172a; letter-spacing:0.03em;"
                                 x-show="isRecording || recordingTime > 0"
                                 x-text="formatTime(recordingTime)">
                             </p>
                             <div class="flex justify-center gap-4 w-full">
                                 <button type="button" x-show="!isRecording && !hasRecording"
                                     @click="startRecording()"
-                                    class="btn-rec-start">
+                                    style="display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 28px; border-radius:14px; font-size:13.5px; font-weight:700; background:linear-gradient(135deg, #4f46e5, #3730a3); color:white; border:1px solid rgba(255,255,255,0.15); cursor:pointer;">
                                     <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>🎙️ Mulai Rekam
                                 </button>
                                 <button type="button" x-show="isRecording"
                                     @click="stopRecording()"
-                                    class="btn-rec-stop">
+                                    style="display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 28px; border-radius:14px; font-size:13.5px; font-weight:700; background:linear-gradient(135deg, #1e293b, #0f172a); color:#f1f5f9; border:1px solid rgba(255,255,255,0.15); cursor:pointer;">
                                     <span class="w-2 h-2 bg-red-500 rounded-sm animate-ping"></span>⏹️ Stop
                                 </button>
                                 <button type="button" x-show="hasRecording && !isRecording"
                                     @click="resetRecorder()"
-                                    class="btn-rec-repeat">
+                                    style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:12px 24px; border-radius:14px; font-size:13.5px; font-weight:600; background:#f8fafc; border:1.5px solid #cbd5e1; color:#334155; cursor:pointer;">
                                     🔄 Ulangi
                                 </button>
                             </div>
                             <div x-show="hasRecording && !isRecording" class="w-full space-y-2">
-                                <p class="text-xs text-gray-500 text-center">Preview hasil rekaman:</p>
+                                <p class="text-xs text-gray-600 text-center">Preview hasil rekaman:</p>
                                 <audio x-ref="audioPreview" controls class="w-full"></audio>
                             </div>
                         </div>
@@ -351,21 +175,21 @@
                             <div class="flex justify-center gap-4 w-full">
                                 <button type="button" x-show="!isRecording && !hasRecording"
                                     @click="startRecording()"
-                                    class="btn-rec-start">
+                                    style="display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 28px; border-radius:14px; font-size:13.5px; font-weight:700; background:linear-gradient(135deg, #4f46e5, #3730a3); color:white; border:1px solid rgba(255,255,255,0.15); cursor:pointer;">
                                     <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>📷 Mulai Rekam
                                 </button>
                                 <button type="button" x-show="isRecording"
                                     @click="stopRecording()"
-                                    class="btn-rec-stop">
+                                    style="display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 28px; border-radius:14px; font-size:13.5px; font-weight:700; background:linear-gradient(135deg, #1e293b, #0f172a); color:#f1f5f9; border:1px solid rgba(255,255,255,0.15); cursor:pointer;">
                                     <span class="w-2 h-2 bg-red-500 rounded-sm animate-ping"></span>⏹️ Stop
                                 </button>
                                 <button type="button" x-show="hasRecording && !isRecording"
                                     @click="resetRecorder()"
-                                    class="btn-rec-repeat">
+                                    style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:12px 24px; border-radius:14px; font-size:13.5px; font-weight:600; background:#f8fafc; border:1.5px solid #cbd5e1; color:#334155; cursor:pointer;">
                                     🔄 Ulangi
                                 </button>
                             </div>
-                            <p x-show="!cameraReady && !isRecording && !hasRecording" class="text-sm text-gray-500 text-center">
+                            <p x-show="!cameraReady && !isRecording && !hasRecording" class="text-sm text-gray-600 text-center">
                                 Klik "Mulai Rekam" untuk mengaktifkan kamera.
                             </p>
                         </div>
@@ -374,39 +198,39 @@
 
                 @if($this->mode === 'upload')
                     <div class="space-y-3">
-                        <div class="upload-hint">
-                            Format yang diterima: <strong>{{ $this->task->type === 'voice_note' ? 'MP3, WAV, WEBM' : 'MP4, WEBM' }}</strong>
-                            — Maks <strong>50MB</strong>.
+                        <div style="font-size:13px; color:#334155; line-height:1.6; padding:11px 14px; background:#f8fafc; border-radius:10px; border:1px dashed #cbd5e1; margin-bottom:4px;">
+                            Format yang diterima: <strong style="color:#d97706;">{{ $this->task->type === 'voice_note' ? 'MP3, WAV, WEBM' : 'MP4, WEBM' }}</strong>
+                            — Maks <strong style="color:#d97706;">50MB</strong>.
                         </div>
                         
-                        <label class="custom-upload-btn">
+                        <label style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; border: 2px dashed #cbd5e1; border-radius: 12px; background: #ffffff; cursor: pointer;">
                             <input type="file"
                                 wire:model="uploadedFile"
                                 accept="{{ $this->task->type === 'voice_note' ? 'audio/*' : 'video/*' }}"
-                                class="hidden">
+                                style="display:none;">
                             <span style="font-size: 26px; margin-bottom: 6px;">{{ $this->task->type === 'voice_note' ? '📁' : '🎥' }}</span>
                             <span style="font-size: 14px; font-weight: 700; color: #d97706;" x-text="$wire.uploadedFile ? '✓ File Berhasil Dipilih' : 'Klik untuk Pilih File Tugas'"></span>
                         </label>
 
-                        <div wire:loading wire:target="uploadedFile" class="text-sm text-amber-600 text-center mt-1">
+                        <div wire:loading wire:target="uploadedFile" style="font-size:13px; color:#d97706; text-align:center; margin-top:4px;">
                             ⏳ Mengupload...
                         </div>
                         @error('uploadedFile')
-                            <p class="text-sm text-red-600">{{ $message }}</p>
+                            <p style="font-size:13px; color:#dc2626;">{{ $message }}</p>
                         @enderror
                     </div>
                 @endif
             </x-filament::card>
 
-            <div class="action-bar">
-                <a href="{{ route('filament.peserta.pages.tugas') }}" class="btn-cancel">← Batal</a>
+            <div style="display:flex; gap:10px; align-items:center; padding:14px 18px; background:var(--fi-card-bg, #ffffff); border:1px solid rgba(148,163,184,0.25); border-radius:16px; justify-content:space-between; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                <a href="{{ route('filament.peserta.pages.tugas') }}" style="display:inline-flex; align-items:center; padding:9px 18px; border-radius:10px; background:white; border:1.5px solid #cbd5e1; color:#374151; font-size:13px; font-weight:600; text-decoration:none;">← Batal</a>
                 <button type="button"
                     @click="submitForm()"
                     x-bind:disabled="isRecording || (mode === 'record' && !hasRecording)"
                     x-bind:class="(isRecording || (mode === 'record' && !hasRecording))
-                        ? 'btn-submit-primary !bg-gray-200 !text-gray-400 !shadow-none !cursor-not-allowed'
-                        : 'btn-submit-primary'"
-                    class="btn-submit-primary">
+                        ? 'bg-gray-200 text-gray-400 shadow-none cursor-not-allowed'
+                        : ''"
+                    style="display:inline-flex; align-items:center; gap:6px; padding:9px 22px; border-radius:10px; font-size:13px; font-weight:700; background:linear-gradient(135deg,#f59e0b,#d97706); color:white; border:none; cursor:pointer; box-shadow:0 2px 10px rgba(245,158,11,0.35);">
                     {{ $this->submission?->status === 'rejected' ? '📤 Submit Ulang' : '📤 Kumpulkan Tugas' }}
                 </button>
             </div>

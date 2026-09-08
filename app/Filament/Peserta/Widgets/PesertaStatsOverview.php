@@ -12,6 +12,17 @@ class PesertaStatsOverview extends BaseWidget
 {
     protected static bool $isLazy = false;
 
+    protected int | string | array $columnSpan = 'full';
+
+    protected function getColumns(): array | int | null
+    {
+        return [
+            'default' => 2,
+            'sm' => 2,
+            'md' => 4,
+        ];
+    }
+
     protected function getStats(): array
     {
         $student   = Auth::user();

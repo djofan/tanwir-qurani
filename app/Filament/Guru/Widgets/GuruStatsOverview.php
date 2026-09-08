@@ -13,6 +13,16 @@ class GuruStatsOverview extends BaseWidget
 {
     protected static bool $isLazy = false;
 
+    protected int | string | array $columnSpan = 'full';
+
+    protected function getColumns(): int | array
+    {
+        return [
+            'default' => 3,
+            'md' => 3,
+        ];
+    }
+
     protected function getStats(): array
     {
         $guruId = Auth::id();
@@ -29,21 +39,19 @@ class GuruStatsOverview extends BaseWidget
         $tugasSayaApprove = Task::where(fn (Builder $q) => $scopeTask($q))->count();
 
         return [
-            Stat::make('Butuh Diperiksa', $butuhPeriksa)
-                ->description($butuhPeriksa > 0 ? '⚠️ Ada setoran menunggu koreksi kamu' : 'Semua sudah diperiksa 🎉')
-                ->descriptionIcon($butuhPeriksa > 0 ? 'heroicon-m-exclamation-triangle' : 'heroicon-m-check-circle')
+            Stat::make('Tugas Terkumpul', $butuhPeriksa)
+                ->description($butuhPeriksa > 0 ? 'Butuh dikoreksi' : 'Semua selesai ')
                 ->color($butuhPeriksa > 0 ? 'danger' : 'success')
-                ->icon('heroicon-o-inbox')
                 ->extraAttributes($butuhPeriksa > 0 ? [
                     'class' => 'ring-2 ring-danger-400 ring-offset-2 ring-offset-white dark:ring-offset-gray-900 animate-pulse',
                 ] : []),
 
             Stat::make('Tugas Saya', $tugasSaya)
-                ->description('Tugas yang saya buat')
+                ->description('Tugas yang dibuat')
                 ->color('success'),
 
-            Stat::make('Total Bisa Saya Review', $tugasSayaApprove)
-                ->description('Tugas saya + jadi approver')
+            Stat::make('Total Review', $tugasSayaApprove)
+                ->description('Selesai direview')
                 ->color('info'),
         ];
     }

@@ -9,6 +9,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -96,12 +97,8 @@ class AnakDidikResource extends Resource
                 TextColumn::make('nama')
                     ->label('Nama Anak')
                     ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('usia')
-                    ->label('Usia')
-                    ->suffix(' th')
-                    ->default('-'),
+                    ->sortable()
+                    ->wrap(),
 
                 TextColumn::make('kelas')
                     ->label('Kelas')
@@ -109,33 +106,45 @@ class AnakDidikResource extends Resource
                     ->badge()
                     ->color('info'),
 
+                // Kolom di bawah ini disembunyikan secara default di mobile agar rapi
+                TextColumn::make('usia')
+                    ->label('Usia')
+                    ->suffix(' th')
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('nama_orang_tua')
                     ->label('Orang Tua')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('nomor_orang_tua')
                     ->label('No. HP Ortu')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('progres_belajar')
                     ->label('Progres Belajar')
                     ->limit(40)
                     ->default('-')
-                    ->tooltip(fn (AnakDidik $record) => $record->progres_belajar),
+                    ->tooltip(fn (AnakDidik $record) => $record->progres_belajar)
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
                     ->label('Terakhir Diperbarui')
                     ->dateTime('d M Y, H:i')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('nama')
+            ->defaultSort('updated_at', 'desc')
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateHeading('Belum ada data anak didik')
@@ -147,6 +156,7 @@ class AnakDidikResource extends Resource
         return [
             'index'  => Pages\ListAnakDidiks::route('/'),
             'create' => Pages\CreateAnakDidik::route('/create'),
+            'view'   => Pages\ViewAnakDidik::route('/{record}'),
             'edit'   => Pages\EditAnakDidik::route('/{record}/edit'),
         ];
     }

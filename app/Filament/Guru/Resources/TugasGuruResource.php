@@ -292,8 +292,8 @@ class TugasGuruResource extends Resource
     {
         return [
             'index'  => Pages\ListTugasGurus::route('/'),
-            'view'  => Pages\ViewTugasGuru::route('/{record}'),
             'create' => Pages\CreateTugasGuru::route('/create'),
+            'view'  => Pages\ViewTugasGuru::route('/{record}'),
             'edit'   => Pages\EditTugasGuru::route('/{record}/edit'),
         ];
     }
