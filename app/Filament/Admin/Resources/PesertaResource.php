@@ -281,11 +281,13 @@ class PesertaResource extends Resource
 
                 TextColumn::make('email')
                     ->label('Email')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('profile.nomor_hp')
                     ->label('No. HP')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('profile.gender')
                     ->label('Kelamin')
@@ -299,16 +301,19 @@ class PesertaResource extends Resource
                         'laki-laki' => 'info',
                         'perempuan' => 'danger',
                         default     => 'gray',
-                    }),
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('profile.tempat_mengajar')
                     ->label('Tempat Mengajar')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('submissions_count')
                     ->label('Tugas Dikumpul')
                     ->counts('submissions')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 ToggleColumn::make('status')
                     ->label('Status Aktif')
@@ -318,7 +323,8 @@ class PesertaResource extends Resource
                 TextColumn::make('created_at')
                     ->label('Didaftarkan')
                     ->dateTime('d M Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 TernaryFilter::make('status')

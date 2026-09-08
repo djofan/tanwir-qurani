@@ -13,6 +13,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Actions\Action;
+use Filament\Actions\ViewAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -51,12 +52,6 @@ class TugasAdminResource extends Resource
                     ->sortable()
                     ->wrap(),
 
-                TextColumn::make('teacher.name')
-                    ->label('Guru Pembuat')
-                    ->searchable()
-                    ->sortable()
-                    ->default('-'),
-
                 TextColumn::make('type')
                     ->label('Tipe')
                     ->formatStateUsing(fn ($state) => match ($state) {
@@ -73,17 +68,26 @@ class TugasAdminResource extends Resource
                         default      => 'gray',
                     }),
 
+                TextColumn::make('teacher.name')
+                    ->label('Guru Pembuat')
+                    ->searchable()
+                    ->sortable()
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('google_form_url')
                     ->label('Link Kuis')
                     ->formatStateUsing(fn ($state) => $state ? 'Lihat Form' : '-')
                     ->url(fn (Task $record) => $record->google_form_url ?? null)
                     ->openUrlInNewTab()
-                    ->color('info'),
+                    ->color('info')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('submissions_count')
                     ->label('Total Kumpul')
                     ->counts('submissions')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('submissions_pending_count')
                     ->label('⏳ Pending')
@@ -92,17 +96,20 @@ class TugasAdminResource extends Resource
                     ])
                     ->sortable()
                     ->color(fn ($state) => $state > 0 ? 'warning' : 'gray')
-                    ->badge(),
+                    ->badge()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('teacher.profile.nomor_hp')
                     ->label('WA Guru')
                     ->default('-')
-                    ->formatStateUsing(fn ($state) => $state !== '-' ? $state : '-'),
+                    ->formatStateUsing(fn ($state) => $state !== '-' ? $state : '-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('type')
@@ -127,6 +134,8 @@ class TugasAdminResource extends Resource
                     }),
             ])
             ->actions([
+                ViewAction::make(),
+                
                 Action::make('whatsapp')
                     ->label('Ingatkan via WA')
                     ->icon('heroicon-o-chat-bubble-left-ellipsis')
@@ -168,6 +177,7 @@ class TugasAdminResource extends Resource
     {
         return [
             'index' => Pages\ListTugasAdmins::route('/'),
+            'view' => Pages\ViewTugasAdmin::route('/{record}'),
         ];
     }
 }

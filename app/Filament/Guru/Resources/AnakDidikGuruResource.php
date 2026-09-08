@@ -11,6 +11,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -123,12 +124,8 @@ class AnakDidikGuruResource extends Resource
                 TextColumn::make('nama')
                     ->label('Nama Anak')
                     ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('usia')
-                    ->label('Usia')
-                    ->suffix(' th')
-                    ->default('-'),
+                    ->sortable()
+                    ->wrap(),
 
                 TextColumn::make('kelas')
                     ->label('Kelas')
@@ -139,32 +136,45 @@ class AnakDidikGuruResource extends Resource
                 TextColumn::make('peserta.name')
                     ->label('Guru Ngaji (Peserta)')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false),
+
+                // Kolom di bawah ini disembunyikan secara default di mobile agar rapi, tapi bisa di-toggle atau dilihat via View
+                TextColumn::make('usia')
+                    ->label('Usia')
+                    ->suffix(' th')
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('peserta.profile.group.name')
                     ->label('Kelompok')
                     ->badge()
                     ->color('success')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('nama_orang_tua')
                     ->label('Orang Tua')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('nomor_orang_tua')
                     ->label('No. HP Ortu')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('progres_belajar')
                     ->label('Progres Belajar')
                     ->limit(40)
                     ->default('-')
-                    ->tooltip(fn (AnakDidik $record) => $record->progres_belajar),
+                    ->tooltip(fn (AnakDidik $record) => $record->progres_belajar)
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
                     ->label('Terakhir Diperbarui')
                     ->dateTime('d M Y, H:i')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('updated_at', 'desc')
             ->filters([
@@ -173,6 +183,7 @@ class AnakDidikGuruResource extends Resource
                     ->relationship('peserta', 'name'),
             ])
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
@@ -189,6 +200,7 @@ class AnakDidikGuruResource extends Resource
         return [
             'index'  => Pages\ListAnakDidikGurus::route('/'),
             'create' => Pages\CreateAnakDidikGuru::route('/create'),
+            'view' => Pages\ViewAnakDidikGuru::route('/{record}'),
             'edit'   => Pages\EditAnakDidikGuru::route('/{record}/edit'),
         ];
     }

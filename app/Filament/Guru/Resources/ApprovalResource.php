@@ -147,18 +147,13 @@ class ApprovalResource extends Resource
                 TextColumn::make('student.name')
                     ->label('Nama Peserta')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->wrap(),
 
                 TextColumn::make('task.title')
                     ->label('Judul Tugas')
                     ->searchable()
                     ->wrap(),
-
-                TextColumn::make('task.teacher.name')
-                    ->label('Guru Pembuat')
-                    ->searchable()
-                    ->badge()
-                    ->color(fn (Submission $record) => $record->task?->teacher_id === Auth::id() ? 'success' : 'gray'),
 
                 TextColumn::make('task.type')
                     ->label('Tipe')
@@ -176,13 +171,23 @@ class ApprovalResource extends Resource
                         default      => 'gray',
                     }),
 
+                // Kolom di bawah ini dibuat toggleable agar tabel mobile tidak meluber ke samping
+                TextColumn::make('task.teacher.name')
+                    ->label('Guru Pembuat')
+                    ->searchable()
+                    ->badge()
+                    ->color(fn (Submission $record) => $record->task?->teacher_id === Auth::id() ? 'success' : 'gray')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('attempts_count')
-                    ->label('Percobaan'),
+                    ->label('Percobaan')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->label('Dikumpulkan')
                     ->dateTime('d M Y, H:i')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('task_id')

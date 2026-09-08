@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Actions\ViewAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -151,19 +152,6 @@ class TugasGuruResource extends Resource
                     ->sortable()
                     ->wrap(),
 
-                TextColumn::make('groups.name')
-                    ->label('Kelompok')
-                    ->badge()
-                    ->separator(',')
-                    ->color('info'),
-
-                TextColumn::make('teacher.name')
-                    ->label('Dibuat Oleh')
-                    ->searchable()
-                    ->sortable()
-                    ->badge()
-                    ->color(fn (Task $record) => $record->teacher_id === Auth::id() ? 'success' : 'gray'),
-
                 TextColumn::make('type')
                     ->label('Tipe')
                     ->formatStateUsing(fn ($state) => match ($state) {
@@ -180,22 +168,6 @@ class TugasGuruResource extends Resource
                         default      => 'gray',
                     }),
 
-                TextColumn::make('questions_count')
-                    ->label('Jumlah Soal')
-                    ->counts('questions')
-                    ->formatStateUsing(fn ($state, Task $record) => $record->type === 'quiz' ? "{$state} soal" : '-')
-                    ->color('info'),
-
-                TextColumn::make('submissions_count')
-                    ->label('Dikumpulkan')
-                    ->counts('submissions')
-                    ->sortable(),
-
-                TextColumn::make('submissions_pending_count')
-                    ->label('Pending')
-                    ->counts(['submissions as submissions_pending_count' => fn (Builder $q) => $q->where('status', 'pending')])
-                    ->sortable(),
-
                 TextColumn::make('deadline')
                     ->label('Deadline')
                     ->dateTime('d M Y, H:i')
@@ -205,10 +177,46 @@ class TugasGuruResource extends Resource
                     ->formatStateUsing(fn ($state, Task $record) => $state ? \Illuminate\Support\Carbon::parse($state)->format('d M Y, H:i') . ($record->isLocked() ? ' 🔒' : '') : 'Bebas')
                     ->sortable(),
 
+                // Kolom di bawah ini dibuat toggleable agar bisa dipilih/disembunyikan via tombol pengaturan kolom
+                TextColumn::make('groups.name')
+                    ->label('Kelompok')
+                    ->badge()
+                    ->separator(',')
+                    ->color('info')
+                    ->toggleable(isToggledHiddenByDefault: true), // Default tersembunyi agar mobile bersih
+
+                TextColumn::make('teacher.name')
+                    ->label('Dibuat Oleh')
+                    ->searchable()
+                    ->sortable()
+                    ->badge()
+                    ->color(fn (Task $record) => $record->teacher_id === Auth::id() ? 'success' : 'gray')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('questions_count')
+                    ->label('Jumlah Soal')
+                    ->counts('questions')
+                    ->formatStateUsing(fn ($state, Task $record) => $record->type === 'quiz' ? "{$state} soal" : '-')
+                    ->color('info')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('submissions_count')
+                    ->label('Dikumpulkan')
+                    ->counts('submissions')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('submissions_pending_count')
+                    ->label('Pending')
+                    ->counts(['submissions as submissions_pending_count' => fn (Builder $q) => $q->where('status', 'pending')])
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('type')
@@ -228,6 +236,8 @@ class TugasGuruResource extends Resource
                     ),
             ])
             ->actions([
+                ViewAction::make(),
+
                 Action::make('lihatHasilKuis')
                     ->label('Hasil Kuis')
                     ->icon('heroicon-o-chart-bar')
@@ -282,6 +292,7 @@ class TugasGuruResource extends Resource
     {
         return [
             'index'  => Pages\ListTugasGurus::route('/'),
+            'view'  => Pages\ViewTugasGuru::route('/{record}'),
             'create' => Pages\CreateTugasGuru::route('/create'),
             'edit'   => Pages\EditTugasGuru::route('/{record}/edit'),
         ];

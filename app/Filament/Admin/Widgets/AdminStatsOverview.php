@@ -9,22 +9,32 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class AdminStatsOverview extends BaseWidget
 {
+    protected int | string | array $columnSpan = 'full';
+
+    protected function getColumns(): int | array
+    {
+        return [
+            'default' => 3,
+            'md' => 3,
+        ];
+    }
+
     protected function getStats(): array
     {
         return [
-            Stat::make('Total Guru Aktif', User::where('role', 'guru')->where('status', true)->count())
-                ->description('Guru yang sedang aktif')
-                ->descriptionIcon('heroicon-m-academic-cap')
+            Stat::make('Guru', User::where('role', 'guru')->count()) // Judul dipersingkat agar muat
+                ->description('Aktif') // Deskripsi dibuat ringkas
+                ->descriptionIcon('heroicon-m-user-group')
                 ->color('success'),
-
-            Stat::make('Total Peserta Aktif', User::where('role', 'peserta')->where('status', true)->count())
-                ->description('Peserta yang sedang aktif')
-                ->descriptionIcon('heroicon-m-users')
+            
+            Stat::make('Peserta', User::where('role', 'peserta')->count())
+                ->description('Aktif')
+                ->descriptionIcon('heroicon-m-academic-cap')
                 ->color('info'),
-
-            Stat::make('Total Tugas Berjalan', Task::count())
-                ->description('Semua tugas yang terpublish')
-                ->descriptionIcon('heroicon-m-clipboard-document-list')
+            
+            Stat::make('Tugas', Task::count())
+                ->description('Total')
+                ->descriptionIcon('heroicon-m-document-text')
                 ->color('warning'),
         ];
     }

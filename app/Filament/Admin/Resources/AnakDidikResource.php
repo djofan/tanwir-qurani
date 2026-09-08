@@ -112,15 +112,11 @@ class AnakDidikResource extends Resource
     {
         return $table
             ->columns([
+                // Kolom Utama yang selalu tampil di Mobile
                 TextColumn::make('nama')
                     ->label('Nama Anak')
                     ->searchable()
                     ->sortable(),
-
-                TextColumn::make('usia')
-                    ->label('Usia')
-                    ->suffix(' th')
-                    ->default('-'),
 
                 TextColumn::make('kelas')
                     ->label('Kelas')
@@ -133,24 +129,35 @@ class AnakDidikResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                // Kolom Pendukung yang disembunyikan di Mobile
+                TextColumn::make('usia')
+                    ->label('Usia')
+                    ->suffix(' th')
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('peserta.profile.group.name')
                     ->label('Kelompok')
                     ->badge()
                     ->color('success')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('nama_orang_tua')
                     ->label('Orang Tua')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('nomor_orang_tua')
                     ->label('No. HP Ortu')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
                     ->label('Terakhir Diperbarui')
                     ->dateTime('d M Y, H:i')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('updated_at', 'desc')
             ->filters([
@@ -169,7 +176,7 @@ class AnakDidikResource extends Resource
     {
         return [
             'index'  => Pages\ListAnakDidiks::route('/'),
-            'create' => Pages\CreateAnakDidik::route('/create'),
+            'view' => Pages\ViewAnakDidik::route('/{record}'),
             'edit'   => Pages\EditAnakDidik::route('/{record}/edit'),
         ];
     }

@@ -10,11 +10,4 @@ class ListAnakDidiks extends ListRecords
 {
     protected static string $resource = AnakDidikResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            CreateAction::make()
-                ->label('Tambah Anak Didik'),
-        ];
-    }
 }

@@ -243,16 +243,19 @@ class GuruResource extends Resource
                     ->badge()
                     ->color('success')
                     ->separator(', ')
-                    ->default('Belum ada kelompok'),
+                    ->default('Belum ada kelompok')
+                    ->toggleable(isToggledHiddenByDefault: true), 
 
                 TextColumn::make('email')
                     ->label('Email')
                     ->default('-')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true), 
 
                 TextColumn::make('profile.nomor_hp')
                     ->label('No. HP')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('profile.gender')
                     ->label('Kelamin')
@@ -266,16 +269,19 @@ class GuruResource extends Resource
                         'laki-laki' => 'info',
                         'perempuan' => 'danger',
                         default     => 'gray',
-                    }),
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('profile.kelurahan_nama')
                     ->label('Kelurahan')
-                    ->default('-'),
+                    ->default('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('tasks_count')
                     ->label('Jumlah Tugas')
                     ->counts('tasks')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 ToggleColumn::make('status')
                     ->label('Status Aktif'),
@@ -283,7 +289,8 @@ class GuruResource extends Resource
                 TextColumn::make('created_at')
                     ->label('Dibuat')
                     ->dateTime('d M Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 TernaryFilter::make('status')
@@ -308,6 +315,7 @@ class GuruResource extends Resource
         return [
             'index'  => Pages\ListGurus::route('/'),
             'create' => Pages\CreateGuru::route('/create'),
+            'view' => Pages\ViewGuru::route('/{record}'),
             'edit'   => Pages\EditGuru::route('/{record}/edit'),
         ];
     }
